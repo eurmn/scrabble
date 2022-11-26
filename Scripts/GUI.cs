@@ -1,8 +1,6 @@
 using Godot;
-using System;
-using System.Collections.Generic;
 
-public class GUI : Panel
+public class GUI : Node2D
 {
     // Declare member variables here. Examples:
     private Panel panel;

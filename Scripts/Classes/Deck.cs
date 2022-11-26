@@ -38,7 +38,7 @@ public class GameDeck
 
     public string DrawRandomLetter() {
         random.Randomize();
-        var index = random.RandiRange(1, letterDeck.Count());
+        var index = random.RandiRange(0, letterDeck.Count() - 1);
 
         var letter = letterDeck[index];
         letterDeck.RemoveAt(index);
