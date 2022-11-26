@@ -4,16 +4,11 @@ using System;
 public class Tiles : Node2D
 {
     // Declare member variables here.
-    private const string TW_COLOR = "cc0099";
-    private const string DW_COLOR = "ff80df";
-    private const string CT_COLOR = "ffff4d";
-    private const string DL_COLOR = "8080ff";
-    private const string TL_COLOR = "4dff88";
-    private DynamicFont font = new DynamicFont();
 
     private void GenerateCentralTile()
     {
-        GenerateTile(new Vector2(7, 7), new Color(CT_COLOR));
+        var tile = new CentralTile();
+        AddChild(tile);
     }
 
     private void GenerateTripleWordTiles()
@@ -26,7 +21,9 @@ public class Tiles : Node2D
                 {
                     continue;
                 }
-                GenerateTile(new Vector2(7 * j, 7 * i), new Color(TW_COLOR), "3W");
+                var tile = new TripleWordTile();
+                tile.position = new Vector2(7 * j, 7 * i);
+                AddChild(tile);
             }
         }
     }
@@ -35,10 +32,21 @@ public class Tiles : Node2D
     {
         for (int i = 1; i <= 4; i++)
         {
-            GenerateTile(new Vector2(i, i), new Color(DW_COLOR), "2W");
-            GenerateTile(new Vector2(14 - i, i), new Color(DW_COLOR), "2W");
-            GenerateTile(new Vector2(i, 14 - i), new Color(DW_COLOR), "2W");
-            GenerateTile(new Vector2(14 - i, 14 - i), new Color(DW_COLOR), "2W");
+            var tile_1 = new DoubleWordTile();
+            tile_1.position = new Vector2(i, i);
+            AddChild(tile_1);
+
+            var tile_2 = new DoubleWordTile();
+            tile_2.position = new Vector2(14 - i, i);
+            AddChild(tile_2);
+
+            var tile_3 = new DoubleWordTile();
+            tile_3.position = new Vector2(i, 14 - i);
+            AddChild(tile_3);
+
+            var tile_4 = new DoubleWordTile();
+            tile_4.position = new Vector2(14 - i, 14 - i);
+            AddChild(tile_4);
         }
     }
 
@@ -49,16 +57,38 @@ public class Tiles : Node2D
 
         for (int i = 0; i < xArray.Length; i++)
         {
-            GenerateTile(new Vector2(xArray[i], yArray[i]), new Color(DL_COLOR), "2L");
-            GenerateTile(new Vector2(14 - xArray[i], yArray[i]), new Color(DL_COLOR), "2L");
-            GenerateTile(new Vector2(xArray[i], 14 - yArray[i]), new Color(DL_COLOR), "2L");
-            GenerateTile(new Vector2(14 - xArray[i], 14 - yArray[i]), new Color(DL_COLOR), "2L");
+            var tile_1 = new DoubleLetterTile();
+            tile_1.position = new Vector2(xArray[i], yArray[i]);
+            AddChild(tile_1);
+
+            var tile_2 = new DoubleLetterTile();
+            tile_2.position = new Vector2(14 - xArray[i], yArray[i]);
+            AddChild(tile_2);
+
+            var tile_3 = new DoubleLetterTile();
+            tile_3.position = new Vector2(xArray[i], 14 - yArray[i]);
+            AddChild(tile_3);
+
+            var tile_4 = new DoubleLetterTile();
+            tile_4.position = new Vector2(14 - xArray[i], 14 - yArray[i]);
+            AddChild(tile_4);
         }
 
-        GenerateTile(new Vector2(7, 3), new Color(DL_COLOR), "2L");
-        GenerateTile(new Vector2(7, 14 - 3), new Color(DL_COLOR), "2L");
-        GenerateTile(new Vector2(14 - 3, 7), new Color(DL_COLOR), "2L");
-        GenerateTile(new Vector2(3, 7), new Color(DL_COLOR), "2L");
+        var tile_5 = new DoubleLetterTile();
+        tile_5.position = new Vector2(7, 3);
+        AddChild(tile_5);
+
+        var tile_6 = new DoubleLetterTile();
+        tile_6.position = new Vector2(7, 14 - 3);
+        AddChild(tile_6);
+
+        var tile_7 = new DoubleLetterTile();
+        tile_7.position = new Vector2(14 - 3, 7);
+        AddChild(tile_7);
+
+        var tile_8 = new DoubleLetterTile();
+        tile_8.position = new Vector2(3, 7);
+        AddChild(tile_8);
     }
 
     private void GenerateTripleLetterTiles()
@@ -71,52 +101,17 @@ public class Tiles : Node2D
                 {
                     continue;
                 }
-                GenerateTile(new Vector2(1 + i * 4, 1 + j * 4), new Color(TL_COLOR), "3L");
+
+                var tile = new TripleLetterTile();
+                tile.position = new Vector2(1 + i * 4, 1 + j * 4);
+                AddChild(tile);
             }
         }
-    }
-
-    private void GenerateTile(Vector2 position, Color color, String text = "")
-    {
-        var tile = new Sprite();
-        var tileTexture = new GradientTexture2D();
-        var tileGradient = new Gradient();
-
-        tileTexture.Width = tileTexture.Height = 40;
-        tileTexture.Gradient = tileGradient;
-
-        tileGradient.RemovePoint(1);
-        tileGradient.SetColor(0, color);
-
-        tile.Texture = tileTexture;
-        tile.Centered = false;
-        tile.Position = position * new Vector2(40, 40);
-        tile.Name = position.x.ToString() + "x" + position.y.ToString();
-
-        if (text != "") {
-            var label = new RichTextLabel();
-
-            var theme = new Theme();
-            theme.DefaultFont = font;
-            label.AddColorOverride("default_color", new Color("1e1e1e"));
-
-            label.Theme = theme;
-            label.RectSize = new Vector2(40, 40);
-            label.Text = text;
-            label.RectPosition = new Vector2(10, 10);
-
-            tile.AddChild(label);
-        }
-
-        AddChild(tile);
     }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        font.FontData = GD.Load<DynamicFontData>("res://Fonts/UbuntuMono/UbuntuMonoFontData.tres");
-        font.Size = 20;
-
         GenerateCentralTile();
         GenerateDoubleWordTiles();
         GenerateTripleWordTiles();
