@@ -1,20 +1,16 @@
 using Godot;
 using System;
 
-public class Tile : Node2D
+public partial class Tile : Node2D
 {
     // Declare member variables here. Examples:
     public Vector2 position;
     protected Color color;
     protected string text;
-    private DynamicFont font = new DynamicFont();
 
     protected void SetupTile()
     {
-        font.FontData = GD.Load<DynamicFontData>("res://Fonts/UbuntuMono/UbuntuMonoFontData.tres");
-        font.Size = 20;
-
-        var tile = new Sprite();
+        var tile = new Sprite2D();
         var tileTexture = new GradientTexture2D();
         var tileGradient = new Gradient();
 
@@ -31,16 +27,17 @@ public class Tile : Node2D
 
         if (text != "")
         {
-            var label = new RichTextLabel();
+            var label = new Label();
 
-            var theme = new Theme();
-            theme.DefaultFont = font;
-            label.AddColorOverride("default_color", new Color("1e1e1e"));
+            label.AddThemeColorOverride("font_color", new Color("1e1e1e"));
+            label.AddThemeFontOverride("font", ResourceLoader.Load<Font>("res://Fonts/UbuntuMono/UbuntuMono-Bold.ttf"));
+            label.AddThemeFontSizeOverride("font_size", 20);
 
-            label.Theme = theme;
-            label.RectSize = new Vector2(40, 40);
+            label.Size = new Vector2(40, 40);
             label.Text = text;
-            label.RectPosition = new Vector2(10, 10);
+
+            label.VerticalAlignment = VerticalAlignment.Center;
+            label.HorizontalAlignment = HorizontalAlignment.Center;
 
             tile.AddChild(label);
         }

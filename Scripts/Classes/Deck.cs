@@ -2,15 +2,21 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+// using NHunspell;
+using WeCantSpell.Hunspell;
 
-public class GameDeck
+public partial class GameDeck
 {
     private List<string> letterDeck = new List<string>();
     private RandomNumberGenerator random = new RandomNumberGenerator();
+    private WordList dictionary;
     public Dictionary<string, int> LetterDistribution = new Dictionary<string, int>();
+    // public Hunspell spellChecker = new Hunspell("Dicts/pt_BR.aff", "Dicts/pt_BR.dic");
 
-    private void InitializeLetterDistributionDictionary() {
-        LetterDistribution["a"] = LetterDistribution["e"] = LetterDistribution["i"] = 
+    private void InitializeLetterDistributionDictionary()
+    {
+        LetterDistribution["a"] = LetterDistribution["e"] = LetterDistribution["i"] =
             LetterDistribution["o"] = LetterDistribution["s"] = LetterDistribution["u"] =
             LetterDistribution["m"] = LetterDistribution["r"] = LetterDistribution["t"] = 1;
         LetterDistribution["d"] = LetterDistribution["l"] = LetterDistribution["c"] = LetterDistribution["p"] = 2;
@@ -22,10 +28,11 @@ public class GameDeck
         LetterDistribution[""] = 0;
     }
 
-    private void InitializeLetterDeck() {
+    private void InitializeLetterDeck()
+    {
         // Spaghetti!
-        string[] letters = {"a", "e", "i", "o", "s", "u", "m", "r", "t", "d", "l", "c", "p", "n", "b", "ç", "f", "g", "h", "v", "j", "q", "x", "z"};
-        int[] amounts = {14, 11, 10, 10, 8, 7, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1, 1};
+        string[] letters = { "a", "e", "i", "o", "s", "u", "m", "r", "t", "d", "l", "c", "p", "n", "b", "ç", "f", "g", "h", "v", "j", "q", "x", "z" };
+        int[] amounts = { 14, 11, 10, 10, 8, 7, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1, 1 };
 
         for (int i = 0; i < letters.Count(); i++)
         {
@@ -36,7 +43,8 @@ public class GameDeck
         }
     }
 
-    public string DrawRandomLetter() {
+    public string DrawRandomLetter()
+    {
         random.Randomize();
         var index = random.RandiRange(0, letterDeck.Count() - 1);
 
@@ -46,7 +54,11 @@ public class GameDeck
         return letter;
     }
 
-    public GameDeck() {
+    public GameDeck()
+    {
+        var dictionary = WordList.CreateFromFiles(@"Dicts/pt_BR.dic");
+        GD.Print(dictionary.Check("aiosudhiuashd"));
+
         InitializeLetterDeck();
         InitializeLetterDistributionDictionary();
     }

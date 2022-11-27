@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class CentralTile : Tile
+public partial class CentralTile : Tile
 {
     // Declare member variables here. Examples:
     // private int a = 2;

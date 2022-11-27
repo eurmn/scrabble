@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class TripleWordTile : Tile
+public partial class TripleWordTile : Tile
 {
     // Declare member variables here. Examples:
     // private int a = 2;

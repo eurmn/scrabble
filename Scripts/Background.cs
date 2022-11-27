@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Background : Sprite
+public partial class Background : Sprite2D
 {
 	// Declare member variables here. Examples:
 	private int currentLine = 0;
@@ -34,6 +34,8 @@ public class Background : Sprite
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		Godot.Engine.MaxFps = 60;
+
 		for (int i = 0; i < 32; i++)
 		{
 			GenerateLine();

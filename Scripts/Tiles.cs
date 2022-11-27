@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Tiles : Node2D
+public partial class Tiles : Node2D
 {
     // Declare member variables here.
 

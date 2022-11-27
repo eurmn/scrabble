@@ -1,33 +1,116 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=12 format=3 uid="uid://cat7ug008gq1b"]
 
-[ext_resource path="res://Scripts/Tiles.cs" type="Script" id=1]
-[ext_resource path="res://Scripts/Background.cs" type="Script" id=2]
-[ext_resource path="res://Scripts/GUI.cs" type="Script" id=3]
+[ext_resource type="Script" path="res://Scripts/Tiles.cs" id="1"]
+[ext_resource type="Script" path="res://Scripts/Background.cs" id="2"]
+[ext_resource type="Script" path="res://Scripts/GUI.cs" id="3"]
+[ext_resource type="Script" path="res://Scripts/ScrabbleActionButton.cs" id="4"]
+[ext_resource type="Texture2D" uid="uid://n0l6ylvxdnp8" path="res://Images/swap.svg" id="5"]
+[ext_resource type="Texture2D" uid="uid://coq2jsc4qyjca" path="res://Images/play.svg" id="6"]
+[ext_resource type="Texture2D" uid="uid://bprloyam34a4n" path="res://Images/arrow-down.svg" id="7"]
+[ext_resource type="Script" path="res://Scripts/DrawBackButton.cs" id="8"]
 
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.258824, 0.258824, 0.258824, 1 )
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g0clc"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="World" type="Node2D"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_18p70"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
-[node name="Background" type="Sprite" parent="."]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apdqh"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[node name="World3D" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
 centered = false
-script = ExtResource( 2 )
+script = ExtResource("2")
 
 [node name="Tiles" type="Node2D" parent="."]
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="GUI" type="Node2D" parent="."]
-position = Vector2( 0, 600 )
+position = Vector2(0, 600)
 z_index = 50
-script = ExtResource( 3 )
+script = ExtResource("3")
 
-[node name="Panel" type="Panel" parent="GUI"]
-margin_left = 110.0
-margin_top = 10.0
-margin_right = 500.0
-margin_bottom = 70.0
-custom_styles/panel = SubResource( 4 )
+[node name="LetterPanel" type="Panel" parent="GUI"]
+offset_left = 13.0
+offset_top = 10.0
+offset_right = 403.0
+offset_bottom = 70.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_g0clc")
+
+[node name="ActionPanel" type="Panel" parent="GUI"]
+offset_left = 413.0
+offset_top = 10.0
+offset_right = 583.0
+offset_bottom = 70.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_18p70")
+
+[node name="PlayButton" type="Button" parent="GUI/ActionPanel"]
+layout_mode = 0
+offset_left = 122.0
+offset_top = 12.0
+offset_right = 158.0
+offset_bottom = 48.0
+pivot_offset = Vector2(18, 18)
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_apdqh")
+theme_override_styles/hover = SubResource("StyleBoxFlat_apdqh")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_apdqh")
+theme_override_styles/focus = SubResource("StyleBoxFlat_apdqh")
+icon = ExtResource("6")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("4")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="GUI/ActionPanel/PlayButton"]
+
+[node name="ShuffleLettersButton" type="Button" parent="GUI/ActionPanel"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 48.0
+offset_bottom = 48.0
+pivot_offset = Vector2(18, 18)
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_apdqh")
+theme_override_styles/hover = SubResource("StyleBoxFlat_apdqh")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_apdqh")
+theme_override_styles/focus = SubResource("StyleBoxFlat_apdqh")
+icon = ExtResource("5")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("4")
+
+[node name="DrawLettersButton" type="Button" parent="GUI/ActionPanel"]
+layout_mode = 0
+offset_left = 67.0
+offset_top = 12.0
+offset_right = 103.0
+offset_bottom = 48.0
+pivot_offset = Vector2(18, 18)
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_apdqh")
+theme_override_styles/hover = SubResource("StyleBoxFlat_apdqh")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_apdqh")
+theme_override_styles/focus = SubResource("StyleBoxFlat_apdqh")
+icon = ExtResource("7")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("8")
