@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://cat7ug008gq1b"]
+[gd_scene load_steps=13 format=3 uid="uid://cat7ug008gq1b"]
 
 [ext_resource type="Script" path="res://Scripts/Tiles.cs" id="1"]
 [ext_resource type="Script" path="res://Scripts/Background.cs" id="2"]
 [ext_resource type="Script" path="res://Scripts/GUI.cs" id="3"]
 [ext_resource type="Script" path="res://Scripts/ScrabbleActionButton.cs" id="4"]
 [ext_resource type="Texture2D" uid="uid://n0l6ylvxdnp8" path="res://Images/swap.svg" id="5"]
+[ext_resource type="Script" path="res://Scripts/PlayButton.cs" id="5_22uyu"]
 [ext_resource type="Texture2D" uid="uid://coq2jsc4qyjca" path="res://Images/play.svg" id="6"]
 [ext_resource type="Texture2D" uid="uid://bprloyam34a4n" path="res://Images/arrow-down.svg" id="7"]
 [ext_resource type="Script" path="res://Scripts/DrawBackButton.cs" id="8"]
@@ -77,7 +78,7 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_apdqh")
 icon = ExtResource("6")
 icon_alignment = 1
 expand_icon = true
-script = ExtResource("4")
+script = ExtResource("5_22uyu")
 
 [node name="HTTPRequest" type="HTTPRequest" parent="GUI/ActionPanel/PlayButton"]
 

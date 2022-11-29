@@ -11,7 +11,7 @@ public partial class PlayableTile : Panel
     private FontFile pointsFont = new FontFile();
     private bool beingDragged = false;
     private bool mouseInside = false;
-    private int state = ((int)States.AtDeck);
+    public int State = ((int)States.AtDeck);
     private Label label = new Label();
     private Label pointsLabel = new Label();
     private StyleBoxFlat styleBox = new StyleBoxFlat();
@@ -25,6 +25,7 @@ public partial class PlayableTile : Panel
     }
     public Connections HorizontalConnections = new Connections();
     public Connections VerticalConnections = new Connections();
+    public AdjacentTiles AdjacentTiles = new AdjacentTiles();
     public string Letter;
     public int Points;
     public int Index;
@@ -43,7 +44,7 @@ public partial class PlayableTile : Panel
     {
         if (newState == ((int)States.AtDeck))
         {
-            state = ((int)States.Placed);
+            State = ((int)States.Placed);
 
             styleBox.SetCornerRadiusAll(5);
 
@@ -57,7 +58,7 @@ public partial class PlayableTile : Panel
         }
         else if (newState == ((int)States.Placed))
         {
-            state = ((int)States.Placed);
+            State = ((int)States.Placed);
 
             styleBox.SetCornerRadiusAll(0);
 
@@ -71,100 +72,62 @@ public partial class PlayableTile : Panel
         }
     }
 
-    private class AdjacentTiles
-    {
-        public class Side
-        {
-            public PlayableTile Tile;
-            public bool Exists;
-
-            public Side(bool exists)
-            {
-                Exists = exists;
-            }
-
-            public Side(PlayableTile tile, bool exists)
-            {
-                Exists = exists;
-                Tile = tile;
-            }
-        }
-        public Side Top = new Side(false);
-        public Side Right = new Side(false);
-        public Side Left = new Side(false);
-        public Side Bottom = new Side(false);
-    }
-
     private void placeAt(Vector2 position)
     {
         setState(((int)States.Placed));
         GlobalPosition = position * new Vector2(40, 40);
 
-        // top right bottom left.
-        var adjacentTiles = new AdjacentTiles();
+        var myPosition = GetPositionOnBoard();
 
         foreach (var child in GetParent().GetChildren())
         {
-            if (child == this) continue;
-
             var letter = child as PlayableTile;
+            if (child == this || letter.State == (int)States.AtDeck) continue;
+
             var letterPosition = letter.GetPositionOnBoard();
-            var myPosition = GetPositionOnBoard();
 
             if (letterPosition == myPosition + new Vector2(0, 1))
             {
-                adjacentTiles.Top = new AdjacentTiles.Side(letter, true);
+                AdjacentTiles.Bottom = new AdjacentTiles.Side(letter, true);
             }
             else if (letterPosition == myPosition + new Vector2(1, 0))
             {
-                adjacentTiles.Right = new AdjacentTiles.Side(letter, true);
+                AdjacentTiles.Right = new AdjacentTiles.Side(letter, true);
             }
             else if (letterPosition == myPosition - new Vector2(0, 1))
             {
-                adjacentTiles.Bottom = new AdjacentTiles.Side(letter, true);
+                AdjacentTiles.Top = new AdjacentTiles.Side(letter, true);
             }
             else if (letterPosition == myPosition - new Vector2(1, 0))
             {
-                adjacentTiles.Left = new AdjacentTiles.Side(letter, true);
+                AdjacentTiles.Left = new AdjacentTiles.Side(letter, true);
             }
+        }
 
-            if (adjacentTiles.Left.Exists && !adjacentTiles.Right.Exists)
+        if (!AdjacentTiles.Left.Exists)
+        {
+            HorizontalConnections.IsFirstLetter = true;
+            if (AdjacentTiles.Right.Exists)
             {
-                HorizontalConnections.IsLastLetter = true;
-                adjacentTiles.Left.Tile.HorizontalConnections.IsLastLetter = false;
+                AdjacentTiles.Right.Tile.HorizontalConnections.IsFirstLetter = false;
             }
-            else if (adjacentTiles.Right.Exists && !adjacentTiles.Left.Exists)
-            {
-                HorizontalConnections.IsFirstLetter = true;
-                if (!deck.FirstLetters.Contains(this)) deck.FirstLetters.Add(this);
-                adjacentTiles.Right.Tile.HorizontalConnections.IsFirstLetter = false;
-                deck.FirstLetters.Remove(adjacentTiles.Right.Tile);
-            }
-            else if (!(adjacentTiles.Right.Exists || adjacentTiles.Left.Exists))
-            {
-                if (!deck.FirstLetters.Contains(this)) deck.FirstLetters.Add(this);
-                HorizontalConnections.IsFirstLetter = true;
-                HorizontalConnections.IsLastLetter = true;
-            }
+        } else
+        {
+            AdjacentTiles.Left.Tile.AdjacentTiles.Right = new AdjacentTiles.Side(this, true);
+            HorizontalConnections.IsFirstLetter = false;
+        }
 
-            if (adjacentTiles.Top.Exists && !adjacentTiles.Bottom.Exists)
+        if (!AdjacentTiles.Top.Exists)
+        {
+            VerticalConnections.IsFirstLetter = true;
+            if (AdjacentTiles.Bottom.Exists)
             {
-                VerticalConnections.IsLastLetter = true;
-                adjacentTiles.Top.Tile.VerticalConnections.IsLastLetter = false;
+                AdjacentTiles.Bottom.Tile.VerticalConnections.IsFirstLetter = false;
             }
-            else if (adjacentTiles.Bottom.Exists && !adjacentTiles.Top.Exists)
-            {
-                VerticalConnections.IsFirstLetter = true;
-                if (!deck.FirstLetters.Contains(this)) deck.FirstLetters.Add(this);
-                adjacentTiles.Bottom.Tile.VerticalConnections.IsFirstLetter = false;
-                deck.FirstLetters.Remove(adjacentTiles.Bottom.Tile);
-            }
-            else if (!(adjacentTiles.Top.Exists || adjacentTiles.Bottom.Exists))
-            {
-                if (!deck.FirstLetters.Contains(this)) deck.FirstLetters.Add(this);
-                VerticalConnections.IsFirstLetter = true;
-                VerticalConnections.IsLastLetter = true;
-            }
+        } else
+        {
+            AdjacentTiles.Top.Tile.AdjacentTiles.Bottom = new AdjacentTiles.Side(this, true);
+            VerticalConnections.IsFirstLetter = false;
         }
     }
 
@@ -174,15 +137,21 @@ public partial class PlayableTile : Panel
         Position = new Vector2(5 * (Index + 1) + 50 * Index, 5);
     }
 
-    public Vector2 GetPositionOnBoard()
+    public Vector2 GetMousePositionOnBoard()
     {
         var gridPos = (GetGlobalMousePosition() / 40).Floor();
         return gridPos;
     }
 
+    public Vector2 GetPositionOnBoard()
+    {
+        var gridPos = (GlobalPosition / 40).Floor();
+        return gridPos;
+    }
+
     public void DrawBack()
     {
-        if (state == ((int)States.Placed))
+        if (State == ((int)States.Placed))
         {
             unplace();
             Position = new Vector2(5 * (Index + 1) + 50 * Index, 5);
@@ -237,7 +206,7 @@ public partial class PlayableTile : Panel
             {
                 beingDragged = false;
 
-                var currentTile = GetPositionOnBoard();
+                var currentTile = GetMousePositionOnBoard();
                 if (currentTile.x < 15 && currentTile.x >= 0 && currentTile.y >= 0 && currentTile.y < 15)
                 {
                     placeAt(currentTile);

@@ -3,14 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-// using NHunspell;
-using WeCantSpell.Hunspell;
 
 public partial class GameDeck
 {
     private List<string> letterDeck = new List<string>();
     private RandomNumberGenerator random = new RandomNumberGenerator();
-    private WordList dictionary;
     public Dictionary<string, int> LetterDistribution = new Dictionary<string, int>();
     public List<PlayableTile> FirstLetters = new List<PlayableTile>();
 
@@ -56,12 +53,6 @@ public partial class GameDeck
 
     public GameDeck()
     {
-        var dictionary = WordList.CreateFromFiles(@"Dicts/pt_BR.dic");
-
-        // GD.Print(String.Join(", ", dictionary.CheckDetails("peque")));
-        var query = new QueryOptions();
-        GD.Print(dictionary.CheckDetails("pude", new QueryOptions()).Root);
-
         InitializeLetterDeck();
         InitializeLetterDistributionDictionary();
     }
